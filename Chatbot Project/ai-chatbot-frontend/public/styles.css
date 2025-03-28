@@ -92,7 +92,7 @@ ul li {
 /* Chat Container */
 .chat-container {
     width: 90%;
-    max-width: 500px;
+    max-width: 50%;
     margin: auto;
     background: #f9f9f9;
     padding: 20px;

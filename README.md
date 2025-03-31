@@ -1,4 +1,4 @@
 # TeamHelloWorldRepo
 Team 7 group repository
 
-The deliverable 1 is submited
+The deliverable 2 is submited

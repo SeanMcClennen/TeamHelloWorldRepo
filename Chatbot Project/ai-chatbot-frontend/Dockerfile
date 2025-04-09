@@ -1,6 +1,6 @@
 FROM node:18-alpine
 
-WORKDIR /ai-chatbot-frontend
+WORKDIR /
 
 COPY ai-chatbot-frontend/package.json ai-chatbot-frontend/package-lock.json ./
 

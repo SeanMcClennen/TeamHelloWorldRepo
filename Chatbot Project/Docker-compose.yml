@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    build: ./ai-chatbot-frontend
     ports:
       - "3000:3000"
     volumes:

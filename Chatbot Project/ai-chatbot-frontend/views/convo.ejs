@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Conversation <%= convoId %></title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="chat-container" style="margin-top: 5%;"
+       data-convoid="<%= convoId %>">
+    <h2 style>Conversation <%= convoId %></h2>
+
+    <div id="chat-box" class="chat-box">
+      <% conversation.forEach(msg => { %>
+        <div class="message <%= msg.sender %>"><%= msg.message %></div>
+      <% }) %>
+    </div>
+
+    <div class="chat-input-container">
+      <input type="text" class="chat-input" id="user-input" placeholder="Type a message...">
+      <button id="send-button" class="send-button">Send</button>
+    </div>
+
+    <a href="/chat" class="button primary">Back to Chat</a>
+  </div>
+
+  <script src="/js/script.js"></script>
+
+</body>
+</html>

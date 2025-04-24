@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Conversation</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="chat-container" style="margin-top: 10%;">
+        <h2 class="conversation-title">Select a Conversation</h2>
+        <div class="chat-box">
+          <ul class="conversation-list">
+            <% if (conversations.length > 0) { %>
+              <% conversations.forEach(convo => { %>
+                <li>
+                  <a href="/convo/<%= convo.id %>" class="conversation-link">
+                    <%= convo.name %>
+                  </a>
+                </li>
+              <% }) %>
+            <% } else { %>
+              <li>No conversations yet.</li>
+            <% } %>
+        </ul>
+    </div>
+
+    <a href="/logout" class="button primary" style="margin-top: 15px;">Logout</a>
+  </div>
+</body>
+</html>

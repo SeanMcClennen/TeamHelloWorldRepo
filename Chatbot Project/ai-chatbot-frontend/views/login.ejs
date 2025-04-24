@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="box" style="margin-top: 7.5%;">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required> <!-- lowercase name -->
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required> <!-- lowercase name -->
+            <br>
+            <button type="submit" class="button primary">Login</button>
+        </form>
+        <a href="/signup">Don't have an account? Sign up here.</a>
+    </div>
+</body>
+</html>

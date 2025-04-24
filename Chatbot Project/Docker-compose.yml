@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   web:
     build: ./ai-chatbot-frontend
@@ -18,6 +16,13 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data_container:/data/db
-
+      
+  ai_service:
+    image: tensorflow/tensorflow:latest-gpu
+    volumes:
+      - .:/app
+    ports:
+      - "8888:8888"
+    command: tail -f /dev/null
 volumes:
   mongodb_data_container:

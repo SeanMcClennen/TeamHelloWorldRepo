@@ -1,55 +1,87 @@
+console.log("script.js loaded");
+
+window.convoId = "<%= convoId %>";
+console.log("window.convoId set to:", window.convoId);
+
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("JavaScript loaded!"); // Debugging step 1
+  const chatContainer = document.querySelector(".chat-container");
+  const convoId = chatContainer?.dataset.convoid;
+  const chatBox = document.getElementById("chat-box");
+  const userInput = document.getElementById("user-input");
+  const sendButton = document.getElementById("send-button");
 
-    const chatBox = document.getElementById("chat-box");
-    const userInput = document.getElementById("user-input");
-    const sendButton = document.getElementById("send-button");
+  if (!chatBox || !userInput || !sendButton || !convoId) {
+    console.error("Missing required elements or convoId.");
+    return;
+  }
 
-    if (!chatBox || !userInput || !sendButton) {
-        console.error("One or more elements are missing!");
-        return;
+  sendButton.addEventListener("click", sendMessage);
+  userInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
     }
+  });
 
-    function sendMessage() {
-        console.log("Send button clicked!"); // Debugging step 2
+  async function sendMessage() {
+    console.log("sendMessage() called");
+    const message = userInput.value.trim();
+    if (!message) return;
 
-        const message = userInput.value.trim();
-        if (message === "") return;
+    // Add user's message immediately
+    addMessage(message, "user");
+    userInput.value = "";
 
-        addMessage(message, "user");
-        userInput.value = "";
+    try {
+      // Save user message to backend
+      await saveMessageToDatabase(convoId, "user", message);
 
-        setTimeout(() => {
-            addMessage(getBotResponse(message), "bot");
-        }, 1000);
+      // Send message to AI API and get bot response
+      const botReply = await sendMessageToAI(message);
+
+      if (botReply) {
+        addMessage(botReply, "bot");
+
+        // Save bot response to your backend
+        await saveMessageToDatabase(convoId, "bot", botReply);
+      }
+    } catch (err) {
+      console.error("Send error:", err);
     }
+  }
 
-    function addMessage(text, sender) {
-        console.log(`Adding message: ${text} from ${sender}`); // Debugging step 3
+  function addMessage(text, sender) {
+    const msg = document.createElement("div");
+    msg.classList.add("message", sender);
+    msg.textContent = text;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
 
-        const messageDiv = document.createElement("div");
-        messageDiv.classList.add("message", sender);
-        messageDiv.textContent = text;
-        chatBox.appendChild(messageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function getBotResponse(userMessage) {
-        const responses = {
-            "hello": "Hi there!",
-            "how are you": "I'm a chatbot, doing great!",
-            "bye": "Goodbye! Have a great day!",
-            "default": "I'm not sure how to respond to that."
-        };
-
-        return responses[userMessage.toLowerCase()] || responses["default"];
-    }
-
-    userInput.addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
+  async function sendMessageToAI(userMessage) {
+    const response = await fetch('http://localhost:8000/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: userMessage,
+        is_reply: false,
+        username: "user" // Adjust if you want to support usernames later
+      }),
     });
 
-    sendButton.addEventListener("click", sendMessage);
+    const data = await response.json();
+    return data.response;
+  }
+
+  async function saveMessageToDatabase(convoId, sender, message) {
+    const res = await fetch(`/convo/${convoId}/save`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sender, message }),
+    });
+
+    if (!res.ok) {
+      console.error("Failed to save message to database");
+    }
+  }
 });

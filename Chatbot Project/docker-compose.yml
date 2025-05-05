@@ -1,14 +1,17 @@
+version: "3.8"
+
 services:
   web:
     build: ./ai-chatbot-frontend
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
-      - /node_modules
+      - ./ai-chatbot-frontend:/app
+      - /app/node_modules
+    working_dir: /app
     environment:
       - NODE_ENV=production
-    working_dir: /ai-chatbot-frontend
+    command: node server.js
 
   db:
     image: mongo:latest
@@ -16,13 +19,14 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data_container:/data/db
-      
-  ai_service:
-    image: tensorflow/tensorflow:latest-gpu
-    volumes:
-      - .:/app
+
+  ai:
+    build: ./AI-backend
     ports:
-      - "8888:8888"
-    command: tail -f /dev/null
+      - "8000:8000"
+    volumes:
+      - ./AI-backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
 volumes:
   mongodb_data_container:

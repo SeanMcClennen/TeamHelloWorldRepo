@@ -2,11 +2,11 @@ FROM node:18-alpine
 
 WORKDIR /
 
-COPY ai-chatbot-frontend/package.json ai-chatbot-frontend/package-lock.json ./
+COPY package.json package-lock.json ./
 
 RUN npm install --omit=dev
 
-COPY ai-chatbot-frontend/ .
+COPY / .
 
 EXPOSE 3000
 
